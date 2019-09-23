@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>表</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="./CSS.css" />
+    <script src="./jQuery 1.x.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("button").click(function () {
+                $.ajax({
+                    "url": "./test",
+                    "data": "",
+                    "type": "GET",
+                    "success": function () {
+                        // 参数为json类型的对象
+                        var table = document.getElementById("table");
+                        var xmlhttp = new XMLHttpRequest();
+                        xmlhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                //读取JSON文件，把字符串转换为js对象
+                                var message = JSON.parse(this.responseText);
+                                //创建表元素
+                                var json_table = document.createElement("table");
+                                var json_tr = document.createElement("tr");
+                                //读取JSON文件中键的数量已经各键值的数量来创建表
+                                for (var key in message) {
+                                    var json_th = document.createElement("th");
+                                    var th_txt = document.createTextNode(key);
+                                    json_th.appendChild(th_txt);
+                                    json_tr.appendChild(json_th);
+                                    json_table.appendChild(json_tr);
+                                    //修改表格样式
+                                    json_th.style.border = "1px solid black";
+                                }
+                                for (var num in message.name) {
+                                    var json_tr = document.createElement("tr");
+                                    for (var key in message) {
+                                        var json_td = document.createElement("td");
+                                        var td_txt = document.createTextNode(message[key][num]);
+                                        json_td.appendChild(td_txt);
+                                        json_tr.appendChild(json_td);
+                                        json_table.appendChild(json_tr);
+                                        json_td.style.border = "1px solid black";
+                                    }
+                                }
+                                //添加表格
+                                table.appendChild(json_table);
+                                //change
+                                json_table.style.border = "1px solid black";
+                                json_table.style.width = "800px";
+                            }
+                        };
+                        xmlhttp.open("GET", "./test", true);
+                        xmlhttp.send();
+                    },
+                    "error": function () {
+                        alert("NO");
+                    }
+                });
+
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h2>表</h2>
+    <div id="table">
+
+    </div>
+    <button>点击传输</button>
+    <script src="./JS.js"></script>
+</body>
+
+</html>
